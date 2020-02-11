@@ -1,1 +1,1 @@
-빌링 입니다.
+Configuration applicaiton
