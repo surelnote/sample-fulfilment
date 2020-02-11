@@ -7,16 +7,17 @@ apiurl:
   sampleValue: http://localhost:8080/otherservice
 
   
----
-
-#env:
-#  port: "$(HTTP_PORT)"
-
 jwt:
   key: jwt_key
   subject: jwt_subject
   salt: luvookSecret
   expiration: 10
+
+---
+
+#env:
+#  port: "$(HTTP_PORT)"
+
   
 server:
   port: 8081
