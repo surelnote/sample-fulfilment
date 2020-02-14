@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -29,6 +31,8 @@ public class SampleEntity extends IdField {
 
 	@Getter @Setter
 	@Column(name = "USERID", length=12)
+	@Size(min=3,max=5,message="User Id는 3자이상 5자미만으로 입력해야 합니다.")
+	@NotNull(message="User Id는 필수항목입니다.")
 	String userId;
 	
 	@Getter @Setter
