@@ -25,7 +25,7 @@ server:
     accesslog: 
       pattern: '%{yyyy-MM-dd HH:mm:ss}t\t%s\t%r\t%{User-Agent}i\t%{Referer}i\t%a\t%b'
       enabled: true
-    basedir: C:/Users/pjj/Desktop/jar
+    #basedir: C:/Users/pjj/Desktop/jar
   
 spring:
   profiles: default
