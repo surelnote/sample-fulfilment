@@ -16,6 +16,7 @@ steps:
     ]
 #    waitFor: ['test']
   ### docker Build
+  ### TEST
   - id: 'docker build'
     name: 'gcr.io/cloud-builders/docker'
     args:
