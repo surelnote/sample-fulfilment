@@ -48,7 +48,7 @@ public class SampleEntity extends IdField {
 	int[] scores;
 	
 	@RestResource(exported = false)
-	@Getter @Setter
+	@Setter
 	@Column(name = "IS_DELETED", columnDefinition = "boolean default false")
 	boolean isDeleted;
 	

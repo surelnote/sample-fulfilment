@@ -4,6 +4,8 @@ package com.nuri.lguplus.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -24,6 +26,8 @@ public class TestEntity extends IdField {
 
 	@Getter @Setter
 	@Column(name = "COMMENT", length=100)
+	@Size(min=3,max=5,message="comment는 3자이상 5자이하로 입력해야 합니다.")
+	@NotNull(message="comment는 필수항목입니다.")
 	String comment;
 	
 	@RestResource(exported = false)

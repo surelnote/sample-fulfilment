@@ -15,21 +15,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class TestRepositoryEventListener extends AbstractRepositoryEventListener<TestEntity> {
+
 	@Override
-	protected void onBeforeSave(TestEntity testEntity) {
-		log.info("TestRepositoryEventListener.onBeforeSave");
-		
+	protected void onBeforeCreate(TestEntity testEntity) {
+		log.info("TestRepositoryEventListener.onBeforeCreate");
 		LocalDateTime ldt = LocalDateTime.now();
 		testEntity.setCreateUser(AppContext.getCurrentUser().getUserId());
 		testEntity.setUpdateUser(AppContext.getCurrentUser().getUserId());
 		testEntity.setCreateTime(ldt);
 		testEntity.setUpdateTime(ldt);
-	}
-	
-
-	@Override
-	protected void onBeforeCreate(TestEntity testEntity) {
-		log.info("TestRepositoryEventListener.onBeforeCreate");
 	}
 
 	@Override
@@ -37,6 +31,16 @@ public class TestRepositoryEventListener extends AbstractRepositoryEventListener
 		log.info("TestRepositoryEventListener.onAfterCreate");
 	}
 
+	@Override
+	protected void onBeforeSave(TestEntity testEntity) {
+		log.info("TestRepositoryEventListener.onBeforeSave");
+		
+		LocalDateTime ldt = LocalDateTime.now();
+		testEntity.setUpdateUser(AppContext.getCurrentUser().getUserId());
+		testEntity.setCreateTime(ldt);
+		testEntity.setUpdateTime(ldt);
+	}
+	
 	@Override
 	protected void onAfterSave(TestEntity testEntity) {
 		log.info("TestRepositoryEventListener.onAfterSave");

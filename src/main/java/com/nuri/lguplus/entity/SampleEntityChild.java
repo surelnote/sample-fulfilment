@@ -31,7 +31,7 @@ public class SampleEntityChild extends IdField {
 	@Column(name = "PHONE_NUMBER", length=20)
 	String phoneNumber;
 	
-	@Getter @Setter
+	@Setter
 	@Column(name = "IS_DELETED", columnDefinition = "boolean default false")
 	boolean isDeleted;
 
