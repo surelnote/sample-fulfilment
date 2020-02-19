@@ -19,8 +19,7 @@ public class IdField extends DefaultField{
 	public long getIdentity() {
 		return this.id;
 	}
-	
-	
+
 //	@Id
 //	@GeneratedValue(generator = "uuid")
 //	@GenericGenerator(name = "uuid", strategy = "uuid2")

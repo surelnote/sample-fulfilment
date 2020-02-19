@@ -1,5 +1,6 @@
 package com.nuri.lguplus.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -7,6 +8,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
+import javax.persistence.PostRemove;
+import javax.persistence.PostUpdate;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,7 +20,9 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.nuri.lguplus.config.context.AppContext;
 import com.nuri.lguplus.entity.common.IdField;
 
 import lombok.Getter;
@@ -56,4 +63,67 @@ public class SampleEntity extends IdField {
 	@OneToMany(mappedBy="sampleEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<SampleEntityChild> sampleEntityChilds;
 
+	
+	@PrePersist
+	private void prePersist() {
+		LocalDateTime ldt = LocalDateTime.now();
+		this.setCreateUser(AppContext.getCurrentUser().getUserId());
+		this.setUpdateUser(AppContext.getCurrentUser().getUserId());
+		this.setCreateTime(ldt);
+		this.setUpdateTime(ldt);
+		
+		if(this.getSampleEntityChilds() != null) {
+			for(SampleEntityChild sec : this.getSampleEntityChilds()) {
+				sec.setSampleEntity(this);
+				sec.setCreateUser(AppContext.getCurrentUser().getUserId());
+				sec.setUpdateUser(AppContext.getCurrentUser().getUserId());
+				sec.setCreateTime(ldt);
+				sec.setUpdateTime(ldt);
+			}
+		}
+	}
+	
+	@Transactional
+	@PostPersist
+    private void postPersist() {
+//		TestRepository testRepository = FulfilmentApplication.applicationContext.getBean(TestRepository.class);
+//		TestEntity te = new TestEntity();
+//		te.setComment("test");
+//		te.setCreateUser("PJJ2");
+//		testRepository.save(te);
+//		throw new Exception();
+		
+    }
+
+    
+    @PostUpdate
+    private void postUpdate() {
+    	LocalDateTime ldt = LocalDateTime.now();
+		this.setUpdateUser(AppContext.getCurrentUser().getUserId());
+		this.setUpdateTime(ldt);
+		
+		if(this.getSampleEntityChilds() != null) {
+			for(SampleEntityChild sec : this.getSampleEntityChilds()) {
+				sec.setSampleEntity(this);
+				sec.setUpdateUser(AppContext.getCurrentUser().getUserId());
+				sec.setUpdateTime(ldt);
+			}
+		}
+    }
+    
+    @PostRemove
+    private void PostRemove() {
+    	LocalDateTime ldt = LocalDateTime.now();
+		this.setUpdateUser(AppContext.getCurrentUser().getUserId());
+		this.setUpdateTime(ldt);
+		
+		if(this.getSampleEntityChilds() != null) {
+			for(SampleEntityChild sec : this.getSampleEntityChilds()) {
+				sec.setSampleEntity(this);
+				sec.setUpdateUser(AppContext.getCurrentUser().getUserId());
+				sec.setUpdateTime(ldt);
+			}
+		}
+    }
+	
 }
