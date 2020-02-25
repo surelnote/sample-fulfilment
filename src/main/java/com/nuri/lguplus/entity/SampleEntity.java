@@ -13,6 +13,7 @@ import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -21,9 +22,12 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.annotation.RequestScope;
 
+import com.nuri.lguplus.FulfilmentApplication;
 import com.nuri.lguplus.config.context.AppContext;
 import com.nuri.lguplus.entity.common.IdField;
+import com.nuri.lguplus.repository.jpa.TestRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,9 +37,10 @@ import lombok.Setter;
 @DynamicUpdate
 @Table(name="LGU_SAMPLE_ENTITY")
 @SQLDelete(sql="update LGU_SAMPLE_ENTITY set IS_DELETED=true where ID=? ")
+@RequestScope
 //@RestResource(path="api/test")
 public class SampleEntity extends IdField {
-
+	
 	@Getter @Setter
 	@Column(name = "USERID", length=12)
 	@Size(min=3,max=5,message="User Id는 3자이상 5자미만으로 입력해야 합니다.")
@@ -62,8 +67,13 @@ public class SampleEntity extends IdField {
 	@Getter @Setter
 	@OneToMany(mappedBy="sampleEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<SampleEntityChild> sampleEntityChilds;
-
 	
+	
+	@Setter @Getter
+	@Transient
+	private List<TestEntity> testEntities;
+	
+
 	@PrePersist
 	private void prePersist() {
 		LocalDateTime ldt = LocalDateTime.now();
@@ -86,13 +96,18 @@ public class SampleEntity extends IdField {
 	@Transactional
 	@PostPersist
     private void postPersist() {
-//		TestRepository testRepository = FulfilmentApplication.applicationContext.getBean(TestRepository.class);
-//		TestEntity te = new TestEntity();
-//		te.setComment("test");
-//		te.setCreateUser("PJJ2");
-//		testRepository.save(te);
-//		throw new Exception();
+		LocalDateTime ldt = LocalDateTime.now();
 		
+		TestRepository testRepository = FulfilmentApplication.applicationContext.getBean(TestRepository.class);
+		if(testEntities != null) {
+			for(TestEntity te: testEntities) {
+				te.setCreateUser(AppContext.getCurrentUser().getUserId());
+				te.setUpdateUser(AppContext.getCurrentUser().getUserId());
+				te.setCreateTime(ldt);
+				te.setUpdateTime(ldt);
+				testRepository.save(te);
+			}
+		}
     }
 
     
